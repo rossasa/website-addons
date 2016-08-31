@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import re
 import json
-import openerp
+#import openerp
 from openerp import http
 from openerp.http import request
+from openerp.addons import website
 import logging
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteFile(openerp.addons.website.controllers.main.Website):
+class WebsiteFile(website.controllers.main.Website):
     def _find_website_filename(self, filename):
         name = ext = ''
         res = re.match('(.*)(\.[^.]+)', filename)
