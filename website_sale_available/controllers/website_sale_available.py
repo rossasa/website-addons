@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
-from openerp.tools.translate import _
 
 from openerp.addons.website_sale.controllers.main import website_sale
 
@@ -16,7 +14,7 @@ class controller(website_sale):
         order = request.website.sale_get_order(context=request.context)
         if not all([
                 line.product_uom_qty <= line.product_id.virtual_available
-                for line in order.order_line
-                ]):
+                for line in order.order_line if not line.is_delivery
+        ]):
             return request.redirect("/shop/cart")
         return res

@@ -1,18 +1,20 @@
-from openerp import api, models, fields, SUPERUSER_ID, http
+# -*- coding: utf-8 -*-
+from openerp import http
+from openerp import models
 from openerp.http import request
 
 from openerp.addons.website_sale.controllers.main import website_sale as controller
-from openerp.addons.website_sale.controllers import main as main_file
 
 import werkzeug
+
 
 class website_sale(controller):
 
     @http.route(['/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
+                 '/shop/page/<int:page>',
+                 '/shop/category/<model("product.public.category"):category>',
+                 '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+                 ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', **post):
         request.context['search_tags'] = search
         if category and search:
@@ -36,30 +38,3 @@ class Product(models.Model):
     def search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False):
         domain = self._extend_domain(domain, context)
         return super(Product, self).search(cr, uid, domain, offset=offset, limit=limit, order=order, context=context, count=count)
-
-
-class QueryURL(object):
-    def __init__(self, path='', **args):
-        self.path = path
-        self.args = args
-
-    def __call__(self, path=None, **kw):
-        if not path:
-            path = self.path
-        is_category = path.startswith('/shop/category/')
-        for k,v in self.args.items():
-            if is_category and k=='search':
-                continue
-            kw.setdefault(k,v)
-        l = []
-        for k,v in kw.items():
-            if v:
-                if isinstance(v, list) or isinstance(v, set):
-                    l.append(werkzeug.url_encode([(k,i) for i in v]))
-                else:
-                    l.append(werkzeug.url_encode([(k,v)]))
-        if l:
-            path += '?' + '&'.join(l)
-        return path
-
-main_file.QueryURL = QueryURL

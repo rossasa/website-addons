@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 {
     'name': "Sale only available products on Website",
     'summary': """Sale only available products on Website""",
     'version': '1.0.0',
     'author': 'IT-Projects LLC, Ivan Yelizariev',
     'license': 'GPL-3',
-    'category': 'Custom',
+    'category': 'eCommerce',
     'website': 'https://yelizariev.github.io',
     'images': ['images/available.png'],
     'price': 9.00,
